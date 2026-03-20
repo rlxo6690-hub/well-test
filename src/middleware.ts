@@ -26,20 +26,41 @@ export async function middleware(request: NextRequest) {
   );
 
   const { data: { user } } = await supabase.auth.getUser();
+  const { pathname } = request.nextUrl;
 
-  // 보호된 라우트: 로그인 필요
-  const protectedPaths = ["/notice", "/board", "/gallery", "/profile", "/admin"];
-  const isProtected = protectedPaths.some((p) =>
-    request.nextUrl.pathname.startsWith(p)
-  );
+  // 공개 경로 (로그인 불필요)
+  const publicPaths = ["/", "/auth/callback"];
+  if (publicPaths.includes(pathname)) return supabaseResponse;
 
-  if (isProtected && !user) {
+  // 비로그인 → 홈으로
+  if (!user) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  // 관리자 전용
-  if (request.nextUrl.pathname.startsWith("/admin")) {
-    // role 체크는 page 레벨에서 처리
+  // 로그인된 경우 role 확인
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role, name")
+    .eq("id", user.id)
+    .single();
+
+  // 온보딩 미완료 → /onboarding으로
+  if (!profile?.name && pathname !== "/onboarding") {
+    return NextResponse.redirect(new URL("/onboarding", request.url));
+  }
+
+  // Pending 상태 → /pending으로 (onboarding, pending 제외)
+  if (
+    profile?.role === "pending" &&
+    pathname !== "/pending" &&
+    pathname !== "/onboarding"
+  ) {
+    return NextResponse.redirect(new URL("/pending", request.url));
+  }
+
+  // Admin 전용 경로
+  if (pathname.startsWith("/admin") && profile?.role !== "admin") {
+    return NextResponse.redirect(new URL("/notice", request.url));
   }
 
   return supabaseResponse;
