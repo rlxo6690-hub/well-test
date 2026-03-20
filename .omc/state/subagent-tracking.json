@@ -1,0 +1,35 @@
+{
+  "agents": [
+    {
+      "agent_id": "a1ef053a2b9440a8e",
+      "agent_type": "Explore",
+      "started_at": "2026-03-19T15:33:11.658Z",
+      "parent_mode": "none",
+      "status": "completed",
+      "completed_at": "2026-03-19T15:33:25.442Z",
+      "duration_ms": 13784
+    },
+    {
+      "agent_id": "a6f74e5caf6d0597f",
+      "agent_type": "Plan",
+      "started_at": "2026-03-19T15:34:05.748Z",
+      "parent_mode": "none",
+      "status": "completed",
+      "completed_at": "2026-03-19T15:36:13.013Z",
+      "duration_ms": 127265
+    },
+    {
+      "agent_id": "a23daae8aaa74c59d",
+      "agent_type": "octo:personas:product-writer",
+      "started_at": "2026-03-20T07:27:49.629Z",
+      "parent_mode": "none",
+      "status": "completed",
+      "completed_at": "2026-03-20T07:33:07.849Z",
+      "duration_ms": 318220
+    }
+  ],
+  "total_spawned": 3,
+  "total_completed": 3,
+  "total_failed": 0,
+  "last_updated": "2026-03-20T07:33:07.952Z"
+}
